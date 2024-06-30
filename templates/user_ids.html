@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User IDs</title>
+</head>
+<body>
+    <h1>Existing User IDs</h1>
+    <ul>
+        {% for user_id in user_ids %}
+            <li>{{ user_id }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Go Back</a>
+</body>
+</html>

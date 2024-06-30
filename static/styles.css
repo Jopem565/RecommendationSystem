@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #221c1c; 
+    color: #312c72; 
+}
+
+h1 {
+    color: #816c6c; 
+}
+
+.genre-list {
+    margin-bottom: 20px;
+}
+
+.genre-item {
+    display: block;
+    margin-bottom: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Change to desired button background color */
+    color: white; /* Change to desired button text color */
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049; /* Change to desired button hover color */
+}

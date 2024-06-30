@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation System</title>
+    <link rel="stylesheet" href="static/styles.css">
+  </head>
+  <body>
+    <h1>Welcome to the Movie Recommendation System</h1>
+    <form action="/recommend" method="post">
+      <div class="genre-list">
+        <label class="genre-item">
+            <input type="checkbox" id="action" name="genres" value="Action"> Action
+        </label>
+        <label class="genre-item">
+            <input type="checkbox" id="comedy" name="genres" value="Comedy"> Comedy
+        </label>
+        <label class="genre-item">
+            <input type="checkbox" id="drama" name="genres" value="Drama"> Drama
+        </label>
+        <label class="genre-item">
+            <input type="checkbox" id="thriller" name="genres" value="Thriller"> Thriller
+        </label>
+        <label class="genre-item">
+            <input type="checkbox" id="horror" name="genres" value="Horror"> Horror
+        </label>
+        <label class = "genre-item">
+          <input type="checkbox" id="romance" name="genres" value="Romance"> Romance
+        </label>
+        <!-- Add more genres as needed -->
+    </div>
+
+      <!-- <div class="time-period">
+        <label>
+          <input type="radio" name="time_period" value="2000s or higher">
+          2000s or Higher 
+        </label>
+        <label>
+          <input type="radio" name="time_period" value="older than 2000">
+          Older than 2000
+        </label>
+      </div> -->
+      <button type="submit">Get Recommendations</button>
+    </form>
+  </body>
+</html>
