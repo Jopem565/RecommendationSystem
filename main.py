@@ -1,3 +1,6 @@
+# This file was a testing file used to run the app through the python terminal,
+# before creating the app.py file to convert this into a webpage 
+
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
