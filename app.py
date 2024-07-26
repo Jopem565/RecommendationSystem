@@ -1,30 +1,14 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request
 import pandas as pd
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 
-#Load data by accessing the MovieLens Dataset files
-ratings = pd.read_csv('ml-latest-small/ratings.csv')
+# Load data
 movies = pd.read_csv('ml-latest-small/movies.csv')
+ratings = pd.read_csv('ml-latest-small/ratings.csv')
 
-
-# Create User-Item Matrix
-user_item_matrix = ratings.pivot(index='userId', columns='movieId', values='rating')
-user_item_matrix = user_item_matrix.fillna(0)
-
-# Calculate Item-Item Similarity
-item_similarity = cosine_similarity(user_item_matrix.T)
-item_similarity_df = pd.DataFrame(item_similarity, index=user_item_matrix.columns, columns=user_item_matrix.columns)
-
-# def predict_ratings(user_id):
-#     user_ratings = user_item_matrix.loc[user_id].values
-#     sim_scores = item_similarity_df.values
-#     weighted_ratings = np.dot(user_ratings, sim_scores)
-#     sum_sim_scores = np.abs(sim_scores).sum(axis=1)
-#     predicted_ratings = weighted_ratings / sum_sim_scores
-#     return predicted_ratings
+# Merge movies and ratings dataframes
+movie_ratings = pd.merge(movies, ratings, on='movieId')
 
 @app.route('/')
 def index():
@@ -33,17 +17,56 @@ def index():
 @app.route('/recommend', methods=['POST'])
 def recommend():
     selected_genres = request.form.getlist('genres')
-    # time_period = request.form['time_period']
-    # if time_period == '2000s_or_higher':
-    #     filtered_movies = movies[movies['year'] >= 2000]
-    # elif time_period == 'older_than_2000':
-    #     filtered_movies = movies[movies['year'] < 2000]
-    # else:
-    #     filtered_movies = movies
+    time_period = request.form.get('time_period')
+    min_rating = request.form.get('min_rating')
+    min_rating = float(min_rating) if min_rating else 0  
+    # Default minimum rating to 0 if not provided
+    top_recs = request.form.get('top_recs')
+    top_recs = int(top_recs) if top_recs else 0
+    #Default top recommendations to 0 if not provided
 
-    # Filter movies by selected genres
-    recommended_movies = movies[movies['genres'].str.contains('|'.join(selected_genres))]
-    return render_template('recommend.html', movies=recommended_movies.to_dict(orient='records'))
+    # Initially assign recommended_movies to an empty list
+    recommended_movies = []
+
+    # Filter based on genres
+    if selected_genres:
+        genre_filter = movie_ratings['genres'].str.contains('|'.join(selected_genres))
+    else:
+        genre_filter = pd.Series([True] * len(movie_ratings))
+
+    # Filter based on time period
+    if time_period == '2000s_or_higher':
+        year_filter = movie_ratings['title'].str.extract(r'\((\d{4})\)')[0].astype(float) >= 2000
+    elif time_period == 'older_than_2000':
+        year_filter = movie_ratings['title'].str.extract(r'\((\d{4})\)')[0].astype(float) < 2000
+    else:
+        year_filter = pd.Series([True] * len(movie_ratings))
+
+    # Filter based on rating
+    rating_filter = movie_ratings['rating'] >= min_rating
+
+    # Combine filters
+    combined_filter = genre_filter & year_filter & rating_filter
+    filtered_movies = movie_ratings[combined_filter]
+
+    # Get the top recommended movies
+    if (top_recs == 0):
+        recommended_movies = filtered_movies.drop_duplicates(subset=['movieId']).to_dict(orient='records')
+    else:
+        recommended_movies = filtered_movies.drop_duplicates(subset=['movieId']).head(top_recs).to_dict(orient='records')
+
+    return render_template('recommend.html', movies=recommended_movies)
+
+@app.route('/search', methods=['POST'])
+def search():
+    search_query = request.form.get('search_query', '')
+    search_results = []
+
+    if search_query:
+        # Filter movies based on search query
+        search_results = movies[movies['title'].str.contains(search_query, case=False)].to_dict(orient='records')
+
+    return render_template('recommend.html', search_results=search_results)
 
 if __name__ == '__main__':
     app.run(debug=True)

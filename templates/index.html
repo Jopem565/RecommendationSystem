@@ -8,6 +8,9 @@
   </head>
   <body>
     <h1>Welcome to the Movie Recommendation System</h1>
+
+    <h2><u>Genres</u></h2>
+
     <form action="/recommend" method="post">
       <div class="genre-list">
         <label class="genre-item">
@@ -31,7 +34,7 @@
         <!-- Add more genres as needed -->
     </div>
 
-      <!-- <div class="time-period">
+      <div class="time-period">
         <label>
           <input type="radio" name="time_period" value="2000s or higher">
           2000s or Higher 
@@ -40,7 +43,23 @@
           <input type="radio" name="time_period" value="older than 2000">
           Older than 2000
         </label>
-      </div> -->
+      </div>
+
+      <div class="rating-filter">
+
+        <label for="min_rating">Minimum Rating:</label>
+
+        <input type="number" step="0.1" id="min_rating" name="min_rating" min="0" max="5">
+      </div>
+
+      <div class = "toprecs-filter">
+        <label for="top_recs">Ranking: Top </label>
+
+        <input type="number" step="0.1" id="top_recs" name="top_recs" min="10" max="1000">
+
+        <label for="top_recs">  Recommendations</label>
+      </div>
+
       <button type="submit">Get Recommendations</button>
     </form>
   </body>
