@@ -53,18 +53,31 @@ This project is a web-based application that provides movie recommendations base
     - Select genres and time periods to get recommendations.
     - Use the search bar to find specific movies within the recommendations.
 
-## Machine Learning
+**Backend**
+    - The backend is built using Flask, a lightweight Python web framework. It handles:
+    
+    - Routing between pages (/, /recommend, etc.)
+    
+    - Processing user input from forms (genres and year filters)
+    
+    - Reading and filtering data from the MovieLens dataset (movies.csv and ratings.csv)
+    
+    - Generating personalized movie recommendations based on genre and time period
+    
+    - Rendering templates with the recommended movie results
 
-The recommendation system uses collaborative filtering techniques to predict user preferences and suggest movies. The key components include:
+**Frontend**
+    - The frontend is built with HTML, CSS, and Jinja2 templates (Flask’s templating engine). It includes:
+    
+    - A home page (index.html) where users can select their preferred genres and time range
+    
+    - A results page (recommend.html) that displays the recommended movies dynamically
+    
+    - Clean and simple styling for ease of use and clarity
+    
+    - A search bar feature to quickly locate movies within the recommendations
 
-- **User-Item Matrix:** Constructed from the movie ratings dataset.
-- **Similarity Calculation:** Computes similarity between movies or users.
-- **Prediction:** Generates movie recommendations based on similar user preferences.
 
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request with any improvements or bug fixes.
-
-## Acknowledgements
+## Database
 
 - The movie dataset used in this project is sourced from [MovieLens](https://grouplens.org/datasets/movielens/).
