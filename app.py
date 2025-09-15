@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import pandas as pd
 
+from sklearn.metrics.pairwise import cosine_similarity
+
 app = Flask(__name__)
 
 # Load data
@@ -9,6 +11,10 @@ ratings = pd.read_csv('ml-latest-small/ratings.csv')
 
 # Merge movies and ratings dataframes
 movie_ratings = pd.merge(movies, ratings, on='movieId')
+
+# User-Item Matrix
+user_movie_matrix = ratings_df.pivot_table(index='userId', columns='movieId', values='rating').fillna(0)
+
 
 @app.route('/')
 def index():
@@ -48,6 +54,10 @@ def recommend():
     # Combine filters
     combined_filter = genre_filter & year_filter & rating_filter
     filtered_movies = movie_ratings[combined_filter]
+
+
+    movie_similarity = cosine_similarity(user_movie_matrix.T)
+    movie_similarity_df = pd.DataFrame(movie_similarity, index=user_movie_matrix.columns, columns=user_movie_matrix.columns)
 
     # Get the top recommended movies
     if (top_recs == 0):
