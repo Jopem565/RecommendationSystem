@@ -13,7 +13,7 @@ ratings = pd.read_csv('ml-latest-small/ratings.csv')
 movie_ratings = pd.merge(movies, ratings, on='movieId')
 
 # User-Item Matrix
-user_movie_matrix = ratings_df.pivot_table(index='userId', columns='movieId', values='rating').fillna(0)
+user_movie_matrix = ratings.pivot_table(index='userId', columns='movieId', values='rating').fillna(0)
 
 
 @app.route('/')
@@ -58,6 +58,22 @@ def recommend():
 
     movie_similarity = cosine_similarity(user_movie_matrix.T)
     movie_similarity_df = pd.DataFrame(movie_similarity, index=user_movie_matrix.columns, columns=user_movie_matrix.columns)
+
+
+    if not filtered_movies.empty:
+        # Pick one seed (highest rated movie in filtered set)
+        seed_movie_id = filtered_movies.sort_values('rating', ascending=False).iloc[0]['movieId']
+        
+        # Get most similar movies
+        similar_scores = movie_similarity_df[seed_movie_id].sort_values(ascending=False).drop(seed_movie_id)
+        
+        # Pick top 10 similar movies
+        top_similar_movies = similar_scores.head(10).index
+        
+        # Convert to movie dicts for rendering
+        recommended_movies = movies[movies['movieId'].isin(top_similar_movies)].to_dict(orient='records')
+
+
 
     # Get the top recommended movies
     if (top_recs == 0):
